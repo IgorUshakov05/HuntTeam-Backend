@@ -29,7 +29,7 @@ router.get("/file", validDataFile, async (req, res) => {
         .json({ success: false, message: "Доступ запрещен" });
     }
 
-    return res.sendFile(filePath);
+    return res.download(filePath);
   } catch (e) {
     console.error(e);
     return res
