@@ -1,5 +1,5 @@
 const { body } = require("express-validator");
-// api/v1/request
+// POST api/v1/request
 const validDataRequest = [
   body("connect").custom((value) => {
     if (typeof value !== "string") {
@@ -10,6 +10,9 @@ const validDataRequest = [
       "https://t.me/",
       "https://vk.com/",
       "https://tenchat.ru/",
+      "t.me/",
+      "vk.com/",
+      "tenchat.ru/",
     ];
 
     const startsWithAllowed = allowedPrefixes.some((prefix) =>

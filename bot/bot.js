@@ -19,15 +19,31 @@ bot.on("text", async (ctx) => {
     return ctx.reply("❌ Произошла ошибка при обработке запроса.");
   }
 });
+function formatContactLink(connect) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (emailRegex.test(connect)) {
+    return `mailto:${connect}`;
+  }
+  return connect;
+}
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
 async function sendNewApplication(description, price, file, connect) {
   try {
     let htmlMessage = `🔥 <b>Новый заказ!</b> 🔥
-
-📄 <b>Описание:</b> ${description}  
-💰 <b>Бюджет:</b> ${price}  
-📎 <b>ТЗ:</b> <a href="${file}">Открыть файл</a>  
-📬 <b>Связь:</b> <a href="${connect}">Контакт для связи</a>
+📄 <b>Описание:</b> 
+<pre><code>${escapeHtml(description)}</code></pre>   
+💰 <b>Бюджет:</b> ${price}p
+📎 <b>ТЗ:</b> <a href="${process.env.HOST}/api/v1/file?title=${file}">${process.env.HOST}/api/v1/file?title=${file}</a>  
+📬 <b>Связь:</b> <a href="${formatContactLink(connect)}">${connect}</a>
 `;
     const result = await AllAdmins();
     if (!result.success) {
@@ -35,18 +51,17 @@ async function sendNewApplication(description, price, file, connect) {
     }
 
     const ids = result.ids;
-
     for (const chatID of ids) {
       await bot.telegram.sendMessage(chatID, htmlMessage, {
         parse_mode: "HTML",
       });
     }
 
-    return { success: true,message:"Успех!" };
+    return { success: true, message: "Успех!" };
   } catch (error) {
     console.error("Ошибка при рассылке:", error);
     return { success: false, message: "❌ Произошла ошибка при рассылке." };
   }
 }
 
-module.exports = {bot, sendNewApplication};
+module.exports = { bot, sendNewApplication };
