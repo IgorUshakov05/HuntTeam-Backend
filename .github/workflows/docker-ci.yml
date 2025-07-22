@@ -21,7 +21,6 @@ jobs:
       - name: Test SSH Connection
         run: |
             ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} "echo '✅ SSH подключение успешно!'"
-            EOF
     #   - name: Copy code to server
     #     run: |
     #       rsync -az --exclude ".git" --exclude "node_modules" -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/home/${{ secrets.SSH_USER }}/huntteam
