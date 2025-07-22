@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    environment:
+      - HOST=https://api.huntteam.ru
+    container_name: node_app
+    ports:
+      - '4000:4000'
+    depends_on:
+      - mongo
+    volumes:
+      - ./backend:/app
+    restart: always
+
+  mongo:
+    image: mongo:6.0-jammy
+    container_name: mongo_db
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+volumes:
+  mongo_data:
