@@ -21,20 +21,20 @@ jobs:
       - name: Test SSH Connection
         run: |
             ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} "echo '✅ SSH подключение успешно!'"
-    #   - name: Copy code to server
-    #     run: |
-    #       rsync -az --exclude ".git" --exclude "node_modules" -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/home/${{ secrets.SSH_USER }}/huntteam
+      - name: Copy code to server
+        run: |
+          rsync -az --exclude ".git" --exclude "node_modules" -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/home/${{ secrets.SSH_USER }}/huntteam
 
-    #   - name: Write backend .env to server
-    #     run: |
-    #       ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << EOF
-    #         echo "${{ secrets.BACKEND_ENV }}" > /home/${{ secrets.SSH_USER }}/huntteam/backend/.env
-    #       EOF
+      - name: Write backend .env to server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << EOF
+            echo "${{ secrets.BACKEND_ENV }}" > /home/${{ secrets.SSH_USER }}/huntteam/backend/.env
+          EOF
 
-    #   - name: Run docker-compose
-    #     run: |
-    #       ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << 'EOF'
-    #         cd ~/huntteam
-    #         docker-compose down
-    #         docker-compose up --build
-    #       EOF
+      - name: Run docker-compose
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << 'EOF'
+            cd ~/huntteam
+            docker-compose down
+            docker-compose up --build
+          EOF
