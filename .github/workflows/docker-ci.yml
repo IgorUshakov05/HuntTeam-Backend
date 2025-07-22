@@ -31,10 +31,10 @@ jobs:
             echo "${{ secrets.BACKEND_ENV }}" > /home/${{ secrets.SSH_USER }}/huntteam/backend/.env
           EOF
 
-      - name: Run docker-compose
+      - name: Run docker compose
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << 'EOF'
             cd ~/huntteam
-            docker-compose down
-            docker-compose up --build
+            docker compose down
+            docker compose up --build
           EOF
