@@ -14,24 +14,28 @@ jobs:
 
       - name: Setup SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Copy code to server
+            mkdir -p ~/.ssh
+            echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+      - name: Test SSH Connection
         run: |
-          rsync -az --exclude ".git" --exclude "node_modules" -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/home/${{ secrets.SSH_USER }}/huntteam
+            ssh ${{ secrets.SSH_USER }}@${{ secrets.HOST }} "echo '✅ SSH подключение успешно!'"
+            EOF
+    #   - name: Copy code to server
+    #     run: |
+    #       rsync -az --exclude ".git" --exclude "node_modules" -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.SSH_USER }}@${{ secrets.HOST }}:/home/${{ secrets.SSH_USER }}/huntteam
 
-      - name: Write backend .env to server
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << EOF
-            echo "${{ secrets.BACKEND_ENV }}" > /home/${{ secrets.SSH_USER }}/huntteam/backend/.env
-          EOF
+    #   - name: Write backend .env to server
+    #     run: |
+    #       ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << EOF
+    #         echo "${{ secrets.BACKEND_ENV }}" > /home/${{ secrets.SSH_USER }}/huntteam/backend/.env
+    #       EOF
 
-      - name: Run docker-compose
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << 'EOF'
-            cd ~/huntteam
-            docker-compose down
-            docker-compose up --build
-          EOF
+    #   - name: Run docker-compose
+    #     run: |
+    #       ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << 'EOF'
+    #         cd ~/huntteam
+    #         docker-compose down
+    #         docker-compose up --build
+    #       EOF
