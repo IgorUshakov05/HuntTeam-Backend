@@ -35,6 +35,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.HOST }} << 'EOF'
             cd ~/huntteam
+            npm i dotenv
             docker-compose down
             docker-compose up --build
           EOF
