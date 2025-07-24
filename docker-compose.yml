@@ -7,7 +7,7 @@ services:
       - HOST=https://api.huntteam.ru
     container_name: node_app
     ports:
-      - '4001:4000'
+      - '4000:4000'
     depends_on:
       - mongo
     restart: always
